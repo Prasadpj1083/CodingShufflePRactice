@@ -42,4 +42,13 @@ public class EmployeeService {
         EmployeeEntity saveEmployeeEntity =  empolyeeReporitory.save(toSaveEmployee);
         return modelMapper.map(saveEmployeeEntity,EmployeeDTO.class);
     }
+
+    public EmployeeDTO updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
+        EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
+        employeeEntity.setId(employeeId);
+        EmployeeEntity saveEmployeeDeatils = empolyeeReporitory.save(employeeEntity);
+        return modelMapper.map(saveEmployeeDeatils,EmployeeDTO.class);
+
+
+    }
 }

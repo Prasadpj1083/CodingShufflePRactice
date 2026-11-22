@@ -38,6 +38,11 @@ public class EmployeeController {
         return employeeService.cretaeNewEmployee(inputEmployee);
     }
 
+    @PutMapping(path = "/{employeeId}")
+    public EmployeeDTO updateEmployeeDetails(@RequestBody EmployeeDTO employeeDTO,@PathVariable Long employeeId) {
+        return employeeService.updateEmployeeDetails(employeeDTO,employeeId);
+    }
+
 
 
 
