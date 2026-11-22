@@ -6,8 +6,11 @@ import com.Module2_Practice.Practice_Set.Repository.EmpolyeeReporitory;
 import com.Module2_Practice.Practice_Set.dto.EmployeeDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.ReflectionUtils;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,5 +53,37 @@ public class EmployeeService {
         return modelMapper.map(saveEmployeeDeatils,EmployeeDTO.class);
 
 
+    }
+
+    public boolean isExist(Long employeeId){
+        return empolyeeReporitory.existsById(employeeId);
+    }
+
+    public boolean DeleteEmployeeDetails(Long employeeId) {
+        boolean exist = isExist(employeeId);
+        if(!exist) return false;
+        empolyeeReporitory.deleteById(employeeId);
+        return true;
+
+    }
+
+    public EmployeeDTO updatePartualyEmployeeDetails(Map<String, Object> updates, Long employeeId) {
+        boolean exist = isExist(employeeId);
+        if (!exist) return null;
+        EmployeeEntity employeeEntity =
+                empolyeeReporitory.findById(employeeId).get();
+
+        updates.forEach((field, value) -> {
+            Field fieldToBeUpdated =
+                    ReflectionUtils.findField(EmployeeEntity.class, field);
+
+            fieldToBeUpdated.setAccessible(true);
+
+            ReflectionUtils.setField(
+                    fieldToBeUpdated, employeeEntity, value);
+        });
+        return modelMapper.map(
+                empolyeeReporitory.save(employeeEntity),
+                EmployeeDTO.class);
     }
 }
